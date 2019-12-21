@@ -32,6 +32,9 @@ systemctl stop firewalld
 echo "[TASK] Disable SELinux"
 setenforce 0
 sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
+
+## Shutdown Server
+echo "[TASK] Shutting down server"
 sudo reboot now
 
 ## Update hosts file
