@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ## Update the system
-echo "[TASK] Updating the system"
-yum install -y epel-release >/dev/null 2>&1
-yum update -y >/dev/null 2>&1
+#echo "[TASK] Updating the system"
+#yum install -y epel-release >/dev/null 2>&1
+#yum update -y >/dev/null 2>&1
 
 ## Install desired packages
 echo "[TASK] Installing desired packages"
@@ -32,6 +32,7 @@ systemctl stop firewalld
 echo "[TASK] Disable SELinux"
 setenforce 0
 sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
+sudo reboot now
 
 ## Update hosts file
 #echo "[TASK] Update host file /etc/hosts"
