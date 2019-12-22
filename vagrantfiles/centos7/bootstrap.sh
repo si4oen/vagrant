@@ -54,3 +54,4 @@ cat /dev/null > ~/.bash_history && history -c
 ## Rebooting Server
 echo "[TASK] Rebooting server"
 sudo reboot now
+echo "========== Finished =========="
