@@ -6,7 +6,7 @@ yum update -y >/dev/null 2>&1
 
 # Install desired packages
 echo "[TASK 2] Installing desired packages"
-yum install -y -q vim redhat-lsb-core net-tools bind-utils >/dev/null 2>&1
+yum install -y -q redhat-lsb-core epel-release net-tools bind-utils >/dev/null 2>&1
 
 # Set up global aliases and exports
 echo "[TASK 3] Creating global aliases and functions"
