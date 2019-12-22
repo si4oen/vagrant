@@ -8,9 +8,13 @@ Vagrant.configure(2) do |config|
   NodeCount = 1
 
   (1..NodeCount).each do |i|
-    #config.ssh.insert_key = false
-    #config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
-    #config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+    config.ssh.insert_key = false
+    config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
+    config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+	config.vm.provision "shell", inline: <<-EOC
+      chmod 700 ~/.ssh
+      chmod 400 ~/.ssh/authorized_keys
+    EOC
 	config.vm.provision "shell", path: "bootstrap.sh"
 	
 	config.vm.define "centos0#{i}" do |node|

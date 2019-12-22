@@ -19,13 +19,6 @@ echo "[TASK] Disabled Password authentication in sshd config"
 sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
 systemctl reload sshd
 
-## Set SSH Key-based authentication
-echo "[TASK] Set SSH key-based authentication"
-cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
-chmod 700 ~/.ssh
-chmod 400 ~/.ssh/authorized_keys
-systemctl reload sshd
-
 ## Set Root Password
 echo "[TASK] Set root password"
 echo "centos" | passwd --stdin root >/dev/null 2>&1
