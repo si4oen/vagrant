@@ -15,6 +15,7 @@ Vagrant.configure(2) do |config|
     config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
 	
 	#If install VirtualBox Guest Additions set auto_update to "TRUE" or running command "vagrant vbguest --do install"
+	#must install ==> vagrant plugin install vagrant-vbguest
     if Vagrant.has_plugin?("vagrant-vbguest") then
       config.vbguest.auto_update = false
       config.vbguest.no_remote = true
