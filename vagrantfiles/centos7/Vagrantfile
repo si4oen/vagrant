@@ -4,7 +4,6 @@
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
 Vagrant.configure(2) do |config|
-<<<<<<< HEAD
   
   ### configuration parameters ###
   # which host port to forward box SSH port to
@@ -20,10 +19,6 @@ Vagrant.configure(2) do |config|
   ### end configuration parameters ###
   
   # number of node to deploy
-=======
-
-  #number of node that need to deploy
->>>>>>> b34c605c7aee63417f8672da06713e2bec0dc960
   NodeCount = 1
   (1..NodeCount).each do |i|
     
@@ -34,35 +29,28 @@ Vagrant.configure(2) do |config|
 	
 	#If install VirtualBox Guest Additions set auto_update to "TRUE" or running command "vagrant vbguest --do install"
 	#must install ==> vagrant plugin install vagrant-vbguest
-    if Vagrant.has_plugin?("vagrant-vbguest") then
-      config.vbguest.auto_update = false
-      config.vbguest.no_remote = true
-    end
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
+    config.vbguest.no_remote = true
+  end
       	
 	# run bootstrap script
 	config.vm.provision "shell", path: "bootstrap.sh"
 	
-<<<<<<< HEAD
 	config.vm.define BOX_NAME"#{i}" do |node|
-      node.vm.box = BOX_BASE
-      node.vm.hostname = BOX_NAME"#{i}.testlab.local"
-=======
-	#basic define vm
-	config.vm.define "centos0#{i}" do |node|
-      node.vm.box = "centos/7"
-      node.vm.hostname = "centos0#{i}.testlab.local"
->>>>>>> b34c605c7aee63417f8672da06713e2bec0dc960
-      node.vm.network "public_network", ip: "192.168.16.10#{i}"
+    node.vm.box = BOX_BASE
+    node.vm.hostname = BOX_NAME"#{i}.testlab.local"
+    node.vm.network "public_network", ip: "192.168.16.10#{i}"
       
 	  #provision resources to vm
 	  node.vm.provider "virtualbox" do |vb|
-        vb.name = BOX_NAME"#{i}"
-        vb.memory = BOX_RAM_MB
-        vb.cpus = BOX_CPU_CORE
-      end
+      vb.name = BOX_NAME"#{i}"
+      vb.memory = BOX_RAM_MB
+      vb.cpus = BOX_CPU_CORE
+    end
     
 	end
   
-  end
+end
 
 end
