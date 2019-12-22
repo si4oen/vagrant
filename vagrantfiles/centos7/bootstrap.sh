@@ -1,13 +1,13 @@
 #!/bin/bash
 
-## Update the system
+## Update the system >/dev/null 2>&1
 #echo "[TASK] Updating the system"
-#yum install -y epel-release >/dev/null 2>&1
-#yum update -y >/dev/null 2>&1
+#yum install -y epel-release
+#yum update -y
 
 ## Install desired packages
 echo "[TASK] Installing desired packages"
-yum install -y -q net-tools bind-utils  >/dev/null 2>&1
+yum install -y -q net-tools bind-utils
 
 ## Enable password authentication
 #echo "[TASK] Enabled password authentication in sshd config"
@@ -25,7 +25,7 @@ echo "centos" | passwd --stdin root >/dev/null 2>&1
 
 ## Disable and Stop firewalld
 echo "[TASK] Disable and stop firewalld"
-systemctl disable firewalld >/dev/null 2>&1
+systemctl disable firewalld
 systemctl stop firewalld
 
 ## Disable SELinux
@@ -33,9 +33,27 @@ echo "[TASK] Disable SELinux"
 setenforce 0
 sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
 
-## Shutdown Server
-echo "[TASK] Shutting down server"
-sudo reboot now
+## Remove unnecessary components >/dev/null 2>&1
+echo "[TASK] Remove unnecessary components"
+systemctl stop postfix && systemctl disable postfix && yum -y remove postfix
+systemctl stop chronyd && systemctl disable chronyd && yum -y remove chrony
+systemctl stop avahi-daemon.socket avahi-daemon.service
+systemctl disable avahi-daemon.socket avahi-daemon.service
+yum -y remove avahi-autoipd avahi-libs avahi
+#chkconfig network on
+#systemctl restart network
+
+## Cleanup system >/dev/null 2>&1
+echo "[TASK] Cleanup system"
+yum -y install yum-utils
+package-cleanup -y --oldkernels --count=1
+yum -y autoremove
+yum clean all
+rm -rf /tmp/*
+rm -f /var/log/wtmp /var/log/btmp
+dd if=/dev/zero of=/EMPTY bs=1M
+rm -f /EMPTY
+cat /dev/null > ~/.bash_history && history -c
 
 ## Update hosts file
 #echo "[TASK] Update host file /etc/hosts"
@@ -43,3 +61,7 @@ sudo reboot now
 #172.42.42.10 server.example.com server
 #172.42.42.20 client.example.com client
 #EOF
+
+## Rebooting Server
+echo "[TASK] Rebooting server"
+sudo reboot now
