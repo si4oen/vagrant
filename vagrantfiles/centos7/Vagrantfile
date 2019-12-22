@@ -12,6 +12,11 @@ Vagrant.configure(2) do |config|
 	config.ssh.insert_key = false
     config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
     config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+	
+	config.vbguest.no_remote = true
+	config.vbguest.auto_update = false
+	config.vbguest.iso_path = "~/.vagrant.d/VBoxGuestAdditions_6.0.14.iso"
+	
 	config.vm.provision "shell", path: "bootstrap.sh"
 	
 	config.vm.define "centos0#{i}" do |node|
