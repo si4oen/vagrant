@@ -7,7 +7,7 @@ yum update -y
 
 ## Install desired packages
 echo "[TASK] Installing desired packages"
-yum install -y net-tools bind-utils
+yum install -y net-tools bind-utils wget nano
 
 ## Enable password authentication
 #echo "[TASK] Enabled password authentication in sshd config"
