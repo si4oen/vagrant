@@ -1,0 +1,11 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+#https://nmrony.info/change-disk-size-of-a-vagrant-box/
+#must install ==> vagrant plugin install vagrant-disksize
+
+
+Vagrant.configure('2') do |config|
+  config.vm.box = 'centos/7'
+  config.disksize.size = '60GB'
+end

@@ -1,13 +1,13 @@
 #!/bin/bash
 
-## Update the system >/dev/null 2>&1
-echo "[TASK] Updating the system"
-yum install -y epel-release
-yum update -y
+## Update the system
+#echo "[TASK] Updating the system"
+#yum install -y epel-release >/dev/null 2>&1
+#yum update -y >/dev/null 2>&1
 
 ## Install desired packages
 echo "[TASK] Installing desired packages"
-yum install -y net-tools bind-utils wget nano
+yum install -y -q net-tools bind-utils  >/dev/null 2>&1
 
 ## Enable password authentication
 #echo "[TASK] Enabled password authentication in sshd config"
@@ -25,24 +25,14 @@ echo "centos" | passwd --stdin root >/dev/null 2>&1
 
 ## Disable and Stop firewalld
 echo "[TASK] Disable and stop firewalld"
-systemctl disable firewalld
+systemctl disable firewalld >/dev/null 2>&1
 systemctl stop firewalld
 
 ## Disable SELinux
 echo "[TASK] Disable SELinux"
 setenforce 0
 sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
-
-## Cleanup system >/dev/null 2>&1
-echo "[TASK] Cleanup system"
-package-cleanup -y --oldkernels --count=1
-yum -y autoremove
-yum clean all
-rm -rf /tmp/*
-rm -f /var/log/wtmp /var/log/btmp
-dd if=/dev/zero of=/EMPTY bs=1M
-rm -f /EMPTY
-cat /dev/null > ~/.bash_history && history -c
+sudo reboot now
 
 ## Update hosts file
 #echo "[TASK] Update host file /etc/hosts"
@@ -50,9 +40,3 @@ cat /dev/null > ~/.bash_history && history -c
 #172.42.42.10 server.example.com server
 #172.42.42.20 client.example.com client
 #EOF
-
-## Rebooting Server
-echo "[TASK] Rebooting server"
-echo ""
-echo "========== Finished =========="
-sudo reboot now
