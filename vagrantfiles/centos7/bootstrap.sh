@@ -1,13 +1,13 @@
 #!/bin/bash
 
 ## Update the system >/dev/null 2>&1
-#echo "[TASK] Updating the system"
-#yum install -y epel-release
-#yum update -y
+echo "[TASK] Updating the system"
+sudo yum install -y epel-release
+yum update -y
 
 ## Install desired packages
 echo "[TASK] Installing desired packages"
-yum install -y -q net-tools bind-utils
+yum install -y net-tools bind-utils
 
 ## Enable password authentication
 #echo "[TASK] Enabled password authentication in sshd config"
@@ -33,19 +33,8 @@ echo "[TASK] Disable SELinux"
 setenforce 0
 sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
 
-## Remove unnecessary components >/dev/null 2>&1
-echo "[TASK] Remove unnecessary components"
-systemctl stop postfix && systemctl disable postfix && yum -y remove postfix
-systemctl stop chronyd && systemctl disable chronyd && yum -y remove chrony
-systemctl stop avahi-daemon.socket avahi-daemon.service
-systemctl disable avahi-daemon.socket avahi-daemon.service
-yum -y remove avahi-autoipd avahi-libs avahi
-#chkconfig network on
-#systemctl restart network
-
 ## Cleanup system >/dev/null 2>&1
 echo "[TASK] Cleanup system"
-yum -y install yum-utils
 package-cleanup -y --oldkernels --count=1
 yum -y autoremove
 yum clean all
