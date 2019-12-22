@@ -4,7 +4,7 @@
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
 Vagrant.configure(2) do |config|
-  
+
   ### configuration parameters ###
   #which host port to forward box SSH port to
   #LOCAL_SSH_PORT = "2222"
@@ -13,15 +13,15 @@ Vagrant.configure(2) do |config|
   #name of box
   BOX_NAME = "centos"
   #amount of RAM for Vagrant box
-  BOX_RAM_MB = "2048"
+  BOX_RAM_MB = "1024"
   #number of CPUs for Vagrant box
   BOX_CPU_CORE = "1"
   ### end configuration parameters ###
-  
+
   # number of node to deploy
   NodeCount = 1
   (1..NodeCount).each do |i|
-    
+
 	#ssh key-based authentication
 	config.ssh.insert_key = false
     config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
@@ -33,18 +33,18 @@ Vagrant.configure(2) do |config|
       config.vbguest.auto_update = false
       config.vbguest.no_remote = true
     end
-      	
+
 	#run bootstrap script
 	config.vm.provision "shell", path: "bootstrap.sh"
-	
-	config.vm.define BOX_NAME"#{i}" do |node|
+
+	config.vm.define "#{BOX_NAME}#{i}" do |node|
       node.vm.box = BOX_BASE
-      node.vm.hostname = BOX_NAME"#{i}.testlab.local"
+      node.vm.hostname = "#{BOX_NAME}#{i}.testlab.local"
       node.vm.network "public_network", ip: "192.168.16.10#{i}"
-      
+
 	  #provision resources to vm
 	  node.vm.provider "virtualbox" do |vb|
-        vb.name = BOX_NAME"#{i}"
+        vb.name = "#{BOX_NAME}#{i}"
         vb.memory = BOX_RAM_MB
         vb.cpus = BOX_CPU_CORE
       end
