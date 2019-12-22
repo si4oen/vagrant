@@ -14,8 +14,7 @@ Vagrant.configure(2) do |config|
     config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
 	
 	config.vbguest.no_remote = true
-	config.vbguest.auto_update = false
-	config.vbguest.iso_path = "~/.vagrant.d/VBoxGuestAdditions_6.0.14.iso"
+	config.vbguest.auto_update = true
 	
 	config.vm.provision "shell", path: "bootstrap.sh"
 	
