@@ -1,5 +1,6 @@
 #!/bin/bash
 
+<<<<<<< HEAD
 # Update the system
 echo "[TASK 1] Updating the system"
 yum update -y >/dev/null 2>&1
@@ -24,25 +25,45 @@ echo "colorscheme elflord" >> /etc/vimrc
 # Enable password authentication
 echo "[TASK 4] Enabling password authentication in sshd config"
 sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+=======
+## Update the system
+#echo "[TASK] Updating the system"
+#yum install -y epel-release >/dev/null 2>&1
+#yum update -y >/dev/null 2>&1
+
+## Install desired packages
+echo "[TASK] Installing desired packages"
+yum install -y -q net-tools bind-utils  >/dev/null 2>&1
+
+## Enable password authentication
+#echo "[TASK] Enabled password authentication in sshd config"
+#sed -i "s/^PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
+#systemctl reload sshd
+
+## Disable Password authentication
+echo "[TASK] Disabled Password authentication in sshd config"
+sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
+>>>>>>> 869db12e5fec74799fe0ee73ca66b3d0f825b03f
 systemctl reload sshd
 
-# Disable SELinux
-echo "[TASK 5] Disable SELinux"
-setenforce 0
-sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
+## Set Root Password
+echo "[TASK] Set root password"
+echo "centos" | passwd --stdin root >/dev/null 2>&1
 
-# Set Root password
-echo "[TASK 6] Set root password"
-echo "admin" | passwd --stdin root >/dev/null 2>&1
-
-# Disable and stop firewalld
-echo "[TASK 5] Disable and stop firewalld"
+## Disable and Stop firewalld
+echo "[TASK] Disable and stop firewalld"
 systemctl disable firewalld >/dev/null 2>&1
 systemctl stop firewalld
 
-# Update hosts file
-echo "[TASK 6] Update /etc/hosts file"
-cat >>/etc/hosts<<EOF
-172.42.42.10 server.example.com server
-172.42.42.20 client.example.com client
-EOF
+## Disable SELinux
+echo "[TASK] Disable SELinux"
+setenforce 0
+sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
+sudo reboot now
+
+## Update hosts file
+#echo "[TASK] Update host file /etc/hosts"
+#cat >>/etc/hosts<<EOF
+#172.42.42.10 server.example.com server
+#172.42.42.20 client.example.com client
+#EOF
