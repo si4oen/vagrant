@@ -6,16 +6,13 @@ ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 Vagrant.configure(2) do |config|
 
   ### configuration parameters ###
-  #which host port to forward box SSH port to
-  #LOCAL_SSH_PORT = "2222"
-  #Vagrant base box to use
-  BOX_BASE = "centos/7"
-  #name of box
-  BOX_NAME = "centos"
-  #amount of RAM for Vagrant box
-  BOX_RAM_MB = "1024"
-  #number of CPUs for Vagrant box
-  BOX_CPU_CORE = "1"
+  
+  #LOCAL_SSH_PORT = "2222" #which host port to forward box SSH port to
+  BOX_BASE = "centos/7" #Vagrant base box to use
+  BOX_NAME = "centos" #name of box
+  BOX_RAM_MB = "1024" #amount of RAM
+  BOX_CPU_CORE = "1" #number of CPUs
+
   ### end configuration parameters ###
 
   # number of node to deploy
