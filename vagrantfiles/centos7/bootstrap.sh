@@ -40,8 +40,8 @@ yum -y autoremove
 yum clean all
 rm -rf /tmp/*
 rm -f /var/log/wtmp /var/log/btmp
-dd if=/dev/zero of=/EMPTY bs=1M
-rm -f /EMPTY
+#dd if=/dev/zero of=/EMPTY bs=1M
+#rm -f /EMPTY
 cat /dev/null > ~/.bash_history && history -c
 
 ## Update hosts file
