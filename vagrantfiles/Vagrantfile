@@ -9,7 +9,7 @@ Vagrant.configure(2) do |config|
 
   #HOST_PORT = "2222" #which host-port forward to guest-port
   #GUEST_PORT = "22" #which guest-port will be forward from host-port
-  BOX_BASE = "centos7-1908" #Vagrant base box to use
+  BOX_BASE = "centos/7" #Vagrant base box to use
   BOX_NAME = "centos" #name of box
   BOX_RAM_MB = "1024" #amount of RAM
   BOX_CPU_CORE = "1" #number of CPUs
