@@ -2,7 +2,7 @@
 
 ## Update the system >/dev/null 2>&1
 echo "[TASK] Updating the system"
-#yum install -y epel-release
+yum install -y epel-release
 yum update -y
 
 ## Install desired packages
@@ -10,14 +10,14 @@ echo "[TASK] Installing desired packages"
 yum install -y net-tools wget nano
 
 ## Enable password authentication
-#echo "[TASK] Enabled password authentication in sshd config"
-#sed -i "s/^PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
-#systemctl reload sshd
+echo "[TASK] Enabled password authentication in sshd config"
+sed -i "s/^PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
+systemctl reload sshd
 
 ## Disable Password authentication
-echo "[TASK] Disabled Password authentication in sshd config"
-sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
-systemctl reload sshd
+#echo "[TASK] Disabled Password authentication in sshd config"
+#sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
+#systemctl reload sshd
 
 ## Set Root Password
 echo "[TASK] Set root password"
