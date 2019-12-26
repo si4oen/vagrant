@@ -2,7 +2,7 @@
 
 ## Update the system >/dev/null 2>&1
 echo "[TASK] Updating the system"
-yum install -y epel-release
+#yum install -y epel-release
 yum update -y
 
 ## Install desired packages
