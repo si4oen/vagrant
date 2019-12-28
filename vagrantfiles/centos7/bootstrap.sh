@@ -7,7 +7,7 @@ yum update -y
 
 ## Install desired packages
 echo "[TASK] Installing desired packages"
-yum install -y net-tools wget nano
+yum install -y telnet htop net-tools wget nano
 
 ## Enable password authentication
 echo "[TASK] Enabled password authentication in sshd config"
