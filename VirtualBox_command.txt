@@ -1,0 +1,70 @@
+VBoxManage list vms
+
+==========
+VBoxManage startvm <uuid|vmname> [--type gui|sdl|headless|separate]
+
+Ex:
+VBoxManage startvm "centos1" --type headless
+==========
+VBoxManage controlvm <uuid|vmname> pause|resume|reset|poweroff|savestate|
+
+Ex:
+VBoxManage controlvm "centos1" acpipowerbutton
+VBoxManage controlvm "Ubuntu" poweroff
+
+==========
+VBoxManage modifyvm "vmname" --defaultfrontend headless
+
+
+
+
+
+
+
+==========
+http://lifeofageekadmin.com/how-to-set-your-virtualbox-vm-to-automatically-startup/
+The following steps are adapted from the linked blog post:
+
+First you need to create the file /etc/default/virtualbox and add a few variables.
+
+VBOXAUTOSTART_DB which contains an absolute path to the autostart database directory and
+VBOXAUTOSTART_CONFIG which contains the location of the autostart config settings. The file should look similar to this:
+
+# virtualbox defaults file
+VBOXAUTOSTART_DB=/etc/vbox
+VBOXAUTOSTART_CONFIG=/etc/vbox/vbox.cfg
+Now we need to create the /etc/vbox/vbox.cfg file and add
+
+# Default policy is to deny starting a VM, the other option is "allow".
+default_policy = deny
+# Create an entry for each user allowed to run autostart
+myuserid = {
+allow = true
+}
+Note: If the filename vbox.cfg doesn't work above, try naming it autostart.cfg.
+
+If you are the only user you can just add the line default_policy = allow to the vbox.cfg file.
+
+Set permissions on directory to the vboxuser group and make sure users can write to the directory as well as sticky bit.
+
+sudo chgrp vboxusers /etc/vbox
+sudo chmod 1775 /etc/vbox
+Add each of the users to the vboxusers group.
+
+sudo usermod -a -G vboxusers USERNAME
+(replace USERNAME with the username)
+
+NOTE: If you have changed group permissions for the current user, log out and back in again to refresh the permissions. (credit @kR105)
+
+Every user who wants to enable autostart for individual machines has to set the path to the autostart database directory with
+
+VBoxManage setproperty autostartdbpath /etc/vbox
+and enable autostart for an individual VM with
+
+VBoxManage modifyvm <uuid|vmname> --autostart-enabled on
+This will create a myuserid.start file in /etc/vbox directory
+
+Now restart the vboxautostart-service to read in the changes.
+
+sudo service vboxautostart-service restart
+Reboot your system and your VM should start
