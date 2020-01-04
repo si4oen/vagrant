@@ -1,12 +1,14 @@
 VBoxManage list vms
 
-==========
+===== start a vm =====
 VBoxManage startvm <uuid|vmname> [--type gui|sdl|headless|separate]
 
 Ex:
 VBoxManage startvm "centos1" --type headless
-==========
-VBoxManage controlvm <uuid|vmname> pause|resume|reset|poweroff|savestate|
+===== shutdown a vm =====
+VBoxManage controlvm <uuid|vmname> pause|resume|reset|poweroff|savestate|acpipowerbutton
+
+vboxmanage list runningvms | sed -r 's/.*\{(.*)\}/\1/' | xargs -L1 -I {} VBoxManage controlvm {} acpipowerbutton
 
 Ex:
 VBoxManage controlvm "centos1" acpipowerbutton
@@ -15,10 +17,14 @@ VBoxManage controlvm "Ubuntu" poweroff
 ==========
 VBoxManage modifyvm "vmname" --defaultfrontend headless
 
+===== resize disk-image =====
+VBoxManage modifymedium disk "disk-image.vdi" --resize 81920
 
+===== convert vmdk to vdi disk =====
+VBoxManage clonemedium --format VDI source-disk1.vmdk dest-disk1.vdi
 
-
-
+===== compact disk-image =====
+VBoxManage modifymedium --compact disk1.vdi
 
 
 ==========
