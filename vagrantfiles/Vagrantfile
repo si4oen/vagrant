@@ -35,7 +35,7 @@ Vagrant.configure(2) do |config|
     end
 
 	##run bootstrap script
-	config.vm.provision "shell", path: "bootstrap.sh"
+	#config.vm.provision "shell", path: "bootstrap.sh"
 
 	##deploy vm
     (1..NodeCount).each do |i|
@@ -50,7 +50,11 @@ Vagrant.configure(2) do |config|
         vb.name = "#{BOX_NAME}#{i}"
         vb.memory = BOX_RAM_MB
         vb.cpus = BOX_CPU_CORE
+		# Prevent VirtualBox from interfering with host audio stack
+        vb.customize ["modifyvm", :id, "--audio", "none"]
       end
+	  ##run bootstrap script
+	  node.vm.provision "shell", path: "bootstrap.sh"
 	end
   end
 end
