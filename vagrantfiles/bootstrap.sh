@@ -2,12 +2,12 @@
 
 ## Update the system >/dev/null 2>&1
 echo "===== [TASK] Updating the system ====="
-yum install -y epel-release
-yum update -y
+yum install -y epel-release >/dev/null 2>&1
+yum update -y >/dev/null 2>&1
 
 ## Install desired packages
 echo "===== [TASK] Installing desired packages ====="
-yum install -y telnet htop net-tools wget nano
+yum install -y telnet htop net-tools wget nano >/dev/null 2>&1
 
 ## Enable password authentication
 echo "===== [TASK] Enabled SSH password authentication ====="
@@ -25,7 +25,7 @@ echo "centos" | passwd --stdin root >/dev/null 2>&1
 
 ## Disable and Stop firewalld
 echo "===== [TASK] Disable and stop firewalld ====="
-systemctl disable firewalld
+systemctl disable firewalld >/dev/null 2>&1
 systemctl stop firewalld
 
 ## Disable SELinux
