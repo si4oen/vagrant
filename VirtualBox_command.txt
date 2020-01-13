@@ -5,6 +5,7 @@ VBoxManage startvm <uuid|vmname> [--type gui|sdl|headless|separate]
 
 Ex:
 VBoxManage startvm "centos1" --type headless
+
 ===== shutdown a vm =====
 VBoxManage controlvm <uuid|vmname> pause|resume|reset|poweroff|savestate|acpipowerbutton
 
