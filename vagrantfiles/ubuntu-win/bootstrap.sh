@@ -44,3 +44,9 @@ rm -f /var/log/wtmp /var/log/btmp
 #dd if=/dev/zero of=/EMPTY bs=1M
 #rm -f /EMPTY
 cat /dev/null > ~/.bash_history && history -c
+
+## Rebooting Server
+echo ">>>>> [TASK] Rebooting server"
+echo ""
+echo "########## Finished ##########"
+sudo reboot now
