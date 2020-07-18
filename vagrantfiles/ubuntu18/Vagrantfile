@@ -5,36 +5,58 @@ ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
 Vagrant.configure(2) do |config|
 
-  #disable default /vagrant share
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+  ### configuration parameters ###
+  #HOST_PORT = "2222" ## which host-port forward to guest-port
+  #GUEST_PORT = "22" ## which guest-port will be forward from host-port
+  HOST_NAME = "bionic"
+  BOX_BASE = "ubuntu/bionic64" # Vagrant base box to use
+  BOX_NAME = "bionic" ## name of box
+  BOX_RAM_MB = "2048" ## amount of RAM
+  BOX_CPU_CORE = "2" ## number of CPUs
+  ### end configuration parameters ###
+
+  ### which host-port forward to box-port
+  #config.vm.network "forwarded_port", guest: "#{GUEST_PORT}", host: "#{HOST_PORT}"
   
-  ##ssh key-based authentication
+  ### disable default /vagrant share
+  #config.vm.synced_folder ".", "/vagrant", disabled: true
+  
+  ### ssh key-based authentication
   config.ssh.insert_key = false
   config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
   config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
 
-  ##If install VirtualBox Guest Additions set auto_update to "TRUE" or running command "vagrant vbguest --do install"
-  ##must install ==> vagrant plugin install vagrant-vbguest
+  ### If install VirtualBox Guest Additions set auto_update to "TRUE" or running command "vagrant vbguest --do install"
+  ### must install ==> vagrant plugin install vagrant-vbguest
   if Vagrant.has_plugin?("vagrant-vbguest") then
     config.vbguest.auto_update = false
     config.vbguest.no_remote = true
   end
 
-  ##run bootstrap script
-  config.vm.provision "shell", path: "bootstrap.sh"
+  ### resize hard disk of Vagrant box # must install 'vagrant plugin install vagrant-disksize'
+  config.disksize.size = '20GB' 
 
-  NodeCount = 1
+  ### run bootstrap script for all vm
+  #config.vm.provision "shell", path: "bootstrap.sh"
+  
+  NodeCount = 1	## number of node(s) to deploy
     (1..NodeCount).each do |i|
-    config.vm.define "uvm0#{i}" do |node|
-      node.vm.box = "ubuntu/bionic64"
-      node.vm.hostname = "uvm0#{i}.testlab.local"
-      node.vm.network "public_network", ip: "192.168.16.15#{i}", bridge: "eno1"
-      node.vm.provider "virtualbox" do |v|
-        v.name = "uvm0#{i}"
-        v.memory = 2048
-        v.cpus = 2
-	    v.customize ["modifyvm", :id, "--audio", "none"]
+    config.vm.define "#{BOX_NAME}#{i}" do |node|
+      node.vm.box = BOX_BASE
+      node.vm.hostname = "#{HOST_NAME}#{i}.testlab.local"
+      node.vm.network "public_network", ip: "192.168.16.15#{i}", bridge: "Intel(R) Dual Band Wireless-AC 7265"
+	  #node.vm.network "private_network", ip: "10.10.10.10#{i}"
+      
+	  ### provision resources to vm
+	  node.vm.provider "virtualbox" do |v|
+        v.name = "#{BOX_NAME}#{i}"
+        v.memory = BOX_RAM_MB
+        v.cpus = BOX_CPU_CORE
+	    v.customize ["modifyvm", :id, "--audio", "none"]	## disable audio
       end
+	  
+	  ### run bootstrap script for specific vm
+	  node.vm.provision "shell", path: "bootstrap.sh"
     end
   end
 end
