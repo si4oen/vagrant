@@ -1,0 +1,78 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_NO_PARALLEL'] = 'yes'
+
+Vagrant.configure(2) do |config|
+
+  ### Install missing plugins
+  unless Vagrant.has_plugin?("vagrant-disksize")
+    puts 'Installing vagrant-disksize Plugin...'
+    system('vagrant plugin install vagrant-disksize')
+  end
+   
+  unless Vagrant.has_plugin?("vagrant-vbguest")
+    puts 'Installing vagrant-vbguest Plugin...'
+    system('vagrant plugin install vagrant-vbguest')
+  end
+   
+  unless Vagrant.has_plugin?("vagrant-reload")
+    puts 'Installing vagrant-reload Plugin...'
+    system('vagrant plugin install vagrant-reload')
+  end
+
+  ### configuration parameters ###
+  #HOST_PORT = "2222" ## which host-port forward to guest-port
+  #GUEST_PORT = "22" ## which guest-port will be forward from host-port
+  HOST_NAME = "bionic"
+  BOX_BASE = "ubuntu/bionic64" # Vagrant base box to use
+  BOX_NAME = "bionic" ## name of box
+  BOX_RAM_MB = "2048" ## amount of RAM
+  BOX_CPU_CORE = "2" ## number of CPUs
+
+  ### which host-port forward to box-port
+  #config.vm.network "forwarded_port", guest: "#{GUEST_PORT}", host: "#{HOST_PORT}"
+  
+  ### disable default /vagrant share
+  #config.vm.synced_folder "../data", "/vagrant_data", disabled: true
+  
+  ### ssh key-based authentication
+  config.ssh.insert_key = false
+  config.ssh.private_key_path = ['C:/Users/NguyenThanhDanh/.vagrant.d/insecure_private_key', 'C:/Users/NguyenThanhDanh/.ssh/testlab.key']
+  config.vm.provision "file", source: "C:/Users/NguyenThanhDanh/.ssh/testlab.pub", destination: "~/.ssh/authorized_keys"
+
+  ### If install VirtualBox Guest Additions set auto_update to "TRUE" or running command "vagrant vbguest --do install"
+  ### must install ==> vagrant plugin install vagrant-vbguest
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
+    config.vbguest.no_remote = true # do NOT download the iso file from a webserver
+  end
+
+  ### resize hard disk of Vagrant box # must install 'vagrant plugin install vagrant-disksize'
+  if Vagrant.has_plugin?("vagrant-disksize") then
+    config.disksize.size = '20GB'
+  end
+
+  ### run bootstrap script for all vm
+  #config.vm.provision "shell", path: "bootstrap.sh"
+  
+  NodeCount = 1	## number of node(s) to deploy
+    (1..NodeCount).each do |i|
+    config.vm.define "#{BOX_NAME}" do |node|
+      node.vm.box = BOX_BASE
+      node.vm.hostname = "#{HOST_NAME}.testlab.local"
+      node.vm.network "private_network", ip: "192.168.56.11" # node.vm.network "public_network", bridge: "Intel(R) Wi-Fi 6 AX201 160MHz"
+      
+	  ### provision resources to vm
+	  node.vm.provider "virtualbox" do |v|
+        v.name = "#{BOX_NAME}"
+        v.memory = BOX_RAM_MB
+        v.cpus = BOX_CPU_CORE
+	      v.customize ["modifyvm", :id, "--audio", "none"]	## disable audio
+      end
+	  
+	  ### run bootstrap script for specific vm
+	  node.vm.provision "shell", path: "bootstrap.sh"
+    end
+  end
+end
